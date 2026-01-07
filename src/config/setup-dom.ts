@@ -1,24 +1,44 @@
 import { JSDOM } from "jsdom";
 
-const dom = new JSDOM(`<!DOCTYPE html><html lang="en"><body></body></html>`, {
-    pretendToBeVisual: true // Helps with layout-related calculations
-});
+let domInstance: JSDOM | null = null;
 
-const { window } = dom;
+/**
+ * Initializes the JSDOM environment and patches the global Node.js scope.
+ * This is required for milsymbol to function in a server-side environment.
+ */
+export function initVirtualDOM() {
+    // Return existing instance if already initialized
+    if (domInstance) {
+        return {
+            window: domInstance.window,
+            dom: domInstance
+        };
+    }
 
-// Inject browser globals into Node.js global scope
-(global as any).window = window;
-(global as any).document = window.document;
-(global as any).navigator = window.navigator;
-(global as any).Node = window.Node;
-(global as any).Element = window.Element;
-(global as any).SVGElement = window.SVGElement;
-(global as any).HTMLCanvasElement = window.HTMLCanvasElement;
-(global as any).Image = window.Image;
+    domInstance = new JSDOM(`<!DOCTYPE html><html lang="en"><body></body></html>`, {
+        pretendToBeVisual: true
+    });
 
-// Fix for milsymbol specifically needing createElementNS for SVGs
-(global as any).document.createElementNS = (ns: string, tagName: string) => {
-    return window.document.createElementNS(ns, tagName);
-};
+    const { window } = domInstance;
+    const g = global as any;
 
-export { window, dom };
+    // Inject browser globals into Node.js global scope
+    g.window = window;
+    g.document = window.document;
+    g.navigator = window.navigator;
+    g.Node = window.Node;
+    g.Element = window.Element;
+    g.SVGElement = window.SVGElement;
+    g.HTMLCanvasElement = window.HTMLCanvasElement;
+    g.Image = window.Image;
+
+    // Fix for milsymbol's specific SVG requirement
+    g.document.createElementNS = (ns: string, tagName: string) => {
+        return window.document.createElementNS(ns, tagName);
+    };
+
+    return { window, dom: domInstance };
+}
+
+// Export the types for use elsewhere
+export type DOMEnvironment = ReturnType<typeof initVirtualDOM>;

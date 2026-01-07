@@ -9,6 +9,7 @@ const router = Router();
 router.use("/api-docs", swaggerController.serveDocs);
 // .get handles the actual HTML page
 router.get("/api-docs", swaggerController.setupDocs);
+router.get("/api-docs/json", swaggerController.getJsonDefinition);
 
 router.get("/symbol", symbolController.getSymbol);
 router.post("/symbol", symbolController.postSymbol);
