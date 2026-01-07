@@ -1,6 +1,6 @@
 import { JSDOM } from "jsdom";
 
-const dom = new JSDOM(`<!DOCTYPE html><html><body></body></html>`, {
+const dom = new JSDOM(`<!DOCTYPE html><html lang="en"><body></body></html>`, {
     pretendToBeVisual: true // Helps with layout-related calculations
 });
 
