@@ -1,7 +1,7 @@
 import MS from "milsymbol";
 
 // Helper to generate milsymbol output
-import {base64ToBuffer} from "./base64ToBuffer";
+import {base64ToBuffer} from "../utils/base64ToBuffer";
 import {mapSymbolParams} from "./mapSymbolParams";
 
 // Supported formats
