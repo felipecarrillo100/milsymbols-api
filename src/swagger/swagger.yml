@@ -1,0 +1,285 @@
+openapi: 3.0.3
+info:
+  title: Milsymbol Rendering API
+  description: >
+    HTTP API for generating MIL-STD / APP-6 military symbols using milsymbol.
+    Supports SVG, PNG and JSON outputs.
+  version: 1.0.0
+
+servers:
+  - url: /
+    description: Current Host
+
+paths:
+  /symbol:
+    get:
+      summary: Generate a military symbol
+      description: Generate a symbol using query parameters.
+      parameters:
+        - $ref: '#/components/parameters/Code'
+        - $ref: '#/components/parameters/Format'
+        # Flattened SymbolOptions
+        - $ref: '#/components/parameters/AdditionalInformation'
+        - $ref: '#/components/parameters/StaffComments'
+        - $ref: '#/components/parameters/Type'
+        - $ref: '#/components/parameters/Location'
+        - $ref: '#/components/parameters/DTG'
+        - $ref: '#/components/parameters/Quantity'
+        - $ref: '#/components/parameters/Direction'
+        - $ref: '#/components/parameters/Size'
+        - $ref: '#/components/parameters/Fill'
+        - $ref: '#/components/parameters/Frame'
+        - $ref: '#/components/parameters/Icon'
+        - $ref: '#/components/parameters/InfoFields'
+        - $ref: '#/components/parameters/AlternateMedal'
+        - $ref: '#/components/parameters/CivilianColor'
+      responses:
+        '200':
+          description: Symbol rendered successfully
+          content:
+            image/svg+xml:
+              schema:
+                type: string
+            image/png:
+              schema:
+                type: string
+                format: binary
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SymbolProperties'
+        '400':
+          description: Invalid request
+        '500':
+          description: Rendering error
+
+    post:
+      summary: Generate a military symbol
+      description: Generate a symbol using a JSON body.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              allOf:
+                - $ref: '#/components/schemas/SymbolOptions'
+                - type: object
+                  required:
+                    - code
+      responses:
+        '200':
+          description: Symbol rendered successfully
+          content:
+            image/svg+xml:
+              schema:
+                type: string
+            image/png:
+              schema:
+                type: string
+                format: binary
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SymbolProperties'
+
+  /test:
+    get:
+      summary: Test endpoint
+      description: Returns a hard-coded test symbol.
+      parameters:
+        - $ref: '#/components/parameters/Format'
+      responses:
+        '200':
+          description: Test symbol
+          content:
+            image/svg+xml:
+              schema:
+                type: string
+            image/png:
+              schema:
+                type: string
+                format: binary
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SymbolProperties'
+
+components:
+  parameters:
+    Format:
+      name: format
+      in: query
+      required: false
+      schema:
+        type: string
+        enum: [svg, png, json]
+        default: svg
+      description: Output format
+
+    Code:
+      name: code
+      in: query
+      required: true
+      schema:
+        type: string
+      description: 30-character MIL-STD / APP-6 SIDC
+
+    AdditionalInformation:
+      name: additionalInformation
+      in: query
+      required: false
+      schema:
+        type: string
+
+    StaffComments:
+      name: staffComments
+      in: query
+      required: false
+      schema:
+        type: string
+
+    Type:
+      name: type
+      in: query
+      required: false
+      schema:
+        type: string
+
+    Location:
+      name: location
+      in: query
+      required: false
+      schema:
+        type: string
+
+    DTG:
+      name: dtg
+      in: query
+      required: false
+      schema:
+        type: string
+
+    Quantity:
+      name: quantity
+      in: query
+      required: false
+      schema:
+        type: number
+
+    Direction:
+      name: direction
+      in: query
+      required: false
+      schema:
+        type: number
+
+    Size:
+      name: size
+      in: query
+      required: false
+      schema:
+        type: number
+
+    Fill:
+      name: fill
+      in: query
+      required: false
+      schema:
+        type: boolean
+
+    Frame:
+      name: frame
+      in: query
+      required: false
+      schema:
+        type: boolean
+
+    Icon:
+      name: icon
+      in: query
+      required: false
+      schema:
+        type: boolean
+
+    InfoFields:
+      name: infoFields
+      in: query
+      required: false
+      schema:
+        type: boolean
+
+    AlternateMedal:
+      name: alternateMedal
+      in: query
+      required: false
+      schema:
+        type: boolean
+
+    CivilianColor:
+      name: civilianColor
+      in: query
+      required: false
+      schema:
+        type: boolean
+
+  schemas:
+    ColorMode:
+      type: object
+      required:
+        - civilian
+        - friend
+        - hostile
+        - neutral
+        - unknown
+      properties:
+        civilian:
+          type: string
+        friend:
+          type: string
+        hostile:
+          type: string
+        neutral:
+          type: string
+        unknown:
+          type: string
+
+    SymbolOptions:
+      type: object
+      properties:
+        code:
+          type: string
+          description: MIL-STD / APP-6 SIDC
+        additionalInformation:
+          type: string
+        staffComments:
+          type: string
+        type:
+          type: string
+        location:
+          type: string
+        dtg:
+          type: string
+        quantity:
+          type: number
+        direction:
+          type: number
+        size:
+          type: number
+        fill:
+          type: boolean
+        frame:
+          type: boolean
+        icon:
+          type: boolean
+        infoFields:
+          type: boolean
+        alternateMedal:
+          type: boolean
+        civilianColor:
+          type: boolean
+        colorMode:
+          oneOf:
+            - type: string
+            - $ref: '#/components/schemas/ColorMode'
+
+    SymbolProperties:
+      type: object
+      description: Symbol metadata returned by milsymbol
+      additionalProperties: true
