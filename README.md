@@ -29,7 +29,7 @@ Create a `.env` file in the root directory:
 
 ```text
 PORT=3030
-
+CORS_ORIGIN=*
 ```
 
 ### 4. Running the Service

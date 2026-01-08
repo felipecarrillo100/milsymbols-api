@@ -1,11 +1,12 @@
 import "./config/setup-dom";
-
-import {app} from "./app";
 import {safeLoadEnv} from "./config/loadEnv";
 import {initVirtualDOM} from "./config/setup-dom"; // MUST BE FIRST
+import {creatApp} from "./app";
 
 safeLoadEnv();
-initVirtualDOM()
+initVirtualDOM();
+
+const app = creatApp();
 
 const PORT = process.env.PORT || 3000;
 

@@ -45,7 +45,7 @@ export function mapSymbolParams(q: any): SymbolOptions {
 
         // ────────── Rendering controls ──────────
         size: num(q.size),
-        fill: bool(q.fill),
+        fill: typeof q.fill === "undefined" ? true : bool(q.fill),
         fillOpacity: num(q.fillOpacity),
         frame: boolTrueOnly(q.frame),
         icon: boolTrueOnly(q.icon),
