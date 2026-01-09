@@ -28,8 +28,19 @@ npm install
 Create a `.env` file in the root directory:
 
 ```text
+# --- Server Configuration ---
+# The port the Icon Service will listen on
 PORT=3030
+
+# --- Security & CORS ---
+# Allowed Origins: Use a single URL, '*' for public,
+# or a comma-separated list for multiple specific domains.
+# Example: http://localhost:3000, https://map.myapp.com
 CORS_ORIGIN=*
+
+# Allowed Headers: Comma-separated list of custom headers 
+# the client is permitted to send.
+CORS_ALLOWED_HEADERS=Content-Type, Authorization
 ```
 
 ### 4. Running the Service
