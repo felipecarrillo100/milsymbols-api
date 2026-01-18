@@ -1,20 +1,20 @@
 {
   "compilerOptions": {
     /* The magic setting for clean imports */
-    "module": "ESNext",
-    "moduleResolution": "Bundler",
+    "module": "commonjs",
+    "moduleResolution": "node",
     "allowImportingTsExtensions": false,
-
     /* Standard Layout */
     "rootDir": "./src",
     "outDir": "./dist",
     "target": "ESNext",
-
     /* Best Practices */
     "strict": true,
     "esModuleInterop": true,
     "skipLibCheck": true,
     "moduleDetection": "force"
   },
-  "include": ["src/**/*"]
+  "include": [
+    "src/**/*"
+  ]
 }

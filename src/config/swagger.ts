@@ -5,7 +5,7 @@ import { type JsonObject } from "swagger-ui-express";
 import { Request } from "express";
 
 // Load the YAML file once during startup
-const swaggerPath = path.join(import.meta.dirname, "../swagger/swagger.yml");
+const swaggerPath = path.join(__dirname, "../swagger/swagger.yml");
 const swaggerFile = fs.readFileSync(swaggerPath, "utf8");
 const baseDocument = yaml.load(swaggerFile) as JsonObject;
 
